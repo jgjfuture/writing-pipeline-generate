@@ -4,6 +4,7 @@ import os
 import gpt_generate
 import publish
 import format
+import json
 
 
 @functions_framework.cloud_event
@@ -11,6 +12,8 @@ def entry_point(cloud_event):
     api_key = os.getenv('OPENAI_API_KEY')
     pubsub_topic_name = os.getenv('PUBSUB_TOPIC_NAME')
     data = base64.b64decode(cloud_event.data["message"]["data"])
+    data = data.decode("utf-8")
+    data = json.loads(data)
     page_id = data["notionPageId"]
     reasoning_text = data["reasoningText"]
     messages = gpt_generate.generate_messages(reasoning_text)
