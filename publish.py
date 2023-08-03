@@ -13,4 +13,4 @@ def makePublishMessage(page_id, generated_text):
     return json.dumps({
         "notionPageId": page_id,
         "generatedText": generated_text
-    })
+    }, ensure_ascii=False)
