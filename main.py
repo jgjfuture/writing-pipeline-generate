@@ -3,6 +3,7 @@ import functions_framework
 import os
 import gpt_generate
 import publish
+import format
 
 
 @functions_framework.cloud_event
@@ -18,6 +19,8 @@ def entry_point(cloud_event):
         print("ChatGPT did not finish generating text")
         return
     generated_text = chat_response.choices[0].message.content
+    formatted_text = format.extract_code_blocks(generated_text) or generated_text
     used_tokens = chat_response.usage.total_tokens
     print("Used tokens: " + str(used_tokens))
-    publish.publish_message(publish.makePublishMessage(page_id, generated_text), pubsub_topic_name)
+    print("Generated text: " + formatted_text)
+    publish.publish_message(publish.makePublishMessage(page_id, formatted_text), pubsub_topic_name)
