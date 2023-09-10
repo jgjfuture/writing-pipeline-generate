@@ -29,7 +29,7 @@ jobs:
                   version: '>= 363.0.0'
             - name: 'Deploy'
               run:
-                "gcloud functions deploy gpt-generate-text \
+                "gcloud functions deploy gpt-generate-text2 \
                 --runtime python38 \
                 --entry-point entry_point
                 --region ${{ secrets.REGION }} \
