@@ -28,7 +28,7 @@ jobs:
               uses: 'google-github-actions/deploy-cloud-functions@v1'
               with:
                   name: 'gpt-generate-text'
-                  runtime: 'python311'
+                  runtime: 'python38'
                   entry_point: 'entry_point'
                   region: '${{ secrets.REGION }}'
                   env_vars: '${{ secrets.FN_ENV }}'
