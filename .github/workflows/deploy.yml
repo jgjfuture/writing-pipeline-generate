@@ -21,20 +21,23 @@ jobs:
               name: 'Authenticate to Google Cloud'
               uses: 'google-github-actions/auth@v1'
               with:
-                    workload_identity_provider: '${{ secrets.WORKLOAD_IAM_PROVIDER }}'
-                    service_account: '${{ secrets.SERVICE_ACCOUNT }}'
-            - id: 'deploy'
-              uses: 'google-github-actions/deploy-cloud-functions@v1'
+                  workload_identity_provider: '${{ secrets.WORKLOAD_IAM_PROVIDER }}'
+                  service_account: '${{ secrets.SERVICE_ACCOUNT }}'
+            - name: 'Set up Cloud SDK'
+              uses: 'google-github-actions/setup-gcloud@v1'
               with:
-                  name: 'gpt-generate-text'
-                  runtime: 'python38'
-                  entry_point: 'entry_point'
-                  region: '${{ secrets.REGION }}'
-                  env_vars: '${{ secrets.FN_ENV }}'
-                  source_dir: 'src'
-                  secret_environment_variables: '${{ secrets.FN_SECRET_ENV }}'
-                  max_instances: 1
-                  service_account_email: '${{ secrets.RUNTIME_SERVICE_ACCOUNT_EMAIL }}'
-                  event_trigger_type: 'providers/cloud.pubsub/eventTypes/topic.publish'
-                  event_trigger_resource: '${{ secrets.EVENT_TRIGGER_RESOURCE }}'
-                  deploy_timeout: 30
+                  version: '>= 363.0.0'
+            - name: 'Deploy'
+              run:
+                "gcloud functions deploy gpt-generate-text \
+                --runtime python38 \
+                --entry_point entry_point
+                --region ${{ secrets.REGION }} \
+                --set-env-vars ${{ secrets.FN_ENV }} \
+                --source src \
+                --set-secrets ${{ secrets.FN_SECRET_ENV }} \
+                --max_instances 1 \
+                --service_account: ${{ secrets.RUNTIME_SERVICE_ACCOUNT_EMAIL }} \
+                --trigger-event 'providers/cloud.pubsub/eventTypes/topic.publish' \
+                --trigger-resource '${{ secrets.EVENT_TRIGGER_RESOURCE }}' \
+                -- gen2"
