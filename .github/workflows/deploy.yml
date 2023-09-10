@@ -21,7 +21,6 @@ jobs:
               name: 'Authenticate to Google Cloud'
               uses: 'google-github-actions/auth@v1'
               with:
-                    create_credentials_file: true
                     workload_identity_provider: '${{ secrets.WORKLOAD_IAM_PROVIDER }}'
                     service_account: '${{ secrets.SERVICE_ACCOUNT }}'
             - id: 'deploy'
@@ -35,3 +34,4 @@ jobs:
                   source_dir: 'src'
                   secret_environment_variables: '${{ secrets.FN_SECRET_ENV }}'
                   max_instances: 1
+                  service_account_email: '${{ secrets.RUNTIME_SERVICE_ACCOUNT_EMAIL }} '
