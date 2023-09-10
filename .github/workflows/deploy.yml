@@ -37,3 +37,4 @@ jobs:
                   service_account_email: '${{ secrets.RUNTIME_SERVICE_ACCOUNT_EMAIL }}'
                   event_trigger_type: 'providers/cloud.pubsub/eventTypes/topic.publish'
                   event_trigger_resource: '${{ secrets.EVENT_TRIGGER_RESOURCE }}'
+                  deploy_timeout: 30
