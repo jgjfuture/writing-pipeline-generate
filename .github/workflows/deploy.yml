@@ -37,7 +37,6 @@ jobs:
                 --source src \
                 --set-secrets ${{ secrets.FN_SECRET_ENV }} \
                 --max-instances 1 \
+                --trigger-topic '${{ secrets.EVENT_TRIGGER_RESOURCE }}' \
                 --service-account ${{ secrets.RUNTIME_SERVICE_ACCOUNT_EMAIL }} \
-                --trigger-event 'providers/cloud.pubsub/eventTypes/topic.publish' \
-                --trigger-resource '${{ secrets.EVENT_TRIGGER_RESOURCE }}' \
                 --gen2"
