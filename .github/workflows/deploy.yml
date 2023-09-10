@@ -34,4 +34,6 @@ jobs:
                   source_dir: 'src'
                   secret_environment_variables: '${{ secrets.FN_SECRET_ENV }}'
                   max_instances: 1
-                  service_account_email: '${{ secrets.RUNTIME_SERVICE_ACCOUNT_EMAIL }} '
+                  service_account_email: '${{ secrets.RUNTIME_SERVICE_ACCOUNT_EMAIL }}'
+                  event_trigger_type: 'fn-deploy-122@writing-394513.iam.gserviceaccount.com'
+                  event_trigger_resource: '${{ secrets.EVENT_TRIGGER_RESOURCE }}'
