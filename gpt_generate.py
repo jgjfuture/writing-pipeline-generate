@@ -10,7 +10,7 @@ def gpt_generate(messages_array, api_key):
     return response
 
 
-def generate_messages(reasoning_text):
+def generate_message_query_prompt(reasoning_text):
     messages = [
         {
             "role": "user",
@@ -39,6 +39,44 @@ def generate_messages(reasoning_text):
         {
             "role": "user",
             "content": reasoning_text
+        }
+    ]
+    return messages
+
+def generate_title_query_prompt(message):
+    messages = [
+        {
+            "role": "user",
+            "content": "今から箇条書きで構成された文書を渡すので、そのタイトルを推測してください。結果としてタイトルのみを出力してください。"
+        },
+        {
+            "role": "assistant",
+            "content": "はい、わかりました。では文書を頂戴します。"
+        },
+        {
+            "role": "user",
+            "content": message
+        },
+    ]
+    return messages
+
+def generate_comment_query_prompt(title, message):
+    messages = [
+        {
+            "role": "system",
+            "content": "あなたはアドバイザーです。あなたはクライアントが記述した日記に目を通して、メンタルヘルスあるいは健康の観点からよりよい人生が歩めるようにアドバイスを行います。あなたはメンタルヘルスや健康に関する専門家です。あなたは書いてある内容自体に対するコメントに加えて、その内容を記述したこと自体にも触れてください。"
+        },
+        {
+            "role": "user",
+            "content": "今から、タイトルと箇条書きで構成された日記を渡すので、その内容についてあなたの意見に基づくコメントをしてください。コメントは十分に長く、できるだけ文章のすべての項目にください。"
+        },
+        {
+            "role": "assistant",
+            "content": "はい、わかりました。では日記を見せてもらいますね。"
+        },
+        {
+            "role": "user",
+            "content": "タイトル: ${title}\n文書: ${message}"
         }
     ]
     return messages

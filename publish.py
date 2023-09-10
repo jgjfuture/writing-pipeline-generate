@@ -9,8 +9,10 @@ def publish_message(message, pubsub_topic_name):
     print(future.result())
 
 
-def makePublishMessage(page_id, generated_text):
+def makePublishMessage(page_id, generated_text, generated_title, generated_comment):
     return json.dumps({
         "notionPageId": page_id,
-        "generatedText": generated_text
+        "generatedText": generated_text,
+        "generatedTitle": generated_title,
+        "generatedComment": generated_comment
     }, ensure_ascii=False)
