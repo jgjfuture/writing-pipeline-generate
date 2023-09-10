@@ -47,7 +47,7 @@ def generate_title_query_prompt(message):
     messages = [
         {
             "role": "user",
-            "content": "今から箇条書きで構成された文書を渡すので、そのタイトルを推測してください。結果としてタイトルのみを出力してください。"
+            "content": "今から箇条書きで構成された文書を渡すので、そのタイトルを推測してください。結果としてタイトルのみを出力してください。タイトルは20文字以内にしてください。"
         },
         {
             "role": "assistant",
@@ -76,7 +76,7 @@ def generate_comment_query_prompt(title, message):
         },
         {
             "role": "user",
-            "content": "タイトル: ${title}\n文書: ${message}"
+            "content": f"タイトル: {title}\n文書: {message}"
         }
     ]
     return messages
