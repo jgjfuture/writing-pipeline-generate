@@ -12,14 +12,15 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pip3 install --user -r requirements.txt",
+	"postCreateCommand": "cd src/ && pip3 install --user -r requirements.txt",
 
 	// Configure tool-specific properties.
 	"customizations": {
 		"vscode": {
 			"extensions": [
 				"GitHub.copilot-chat",
-				"GitHub.copilot"
+				"GitHub.copilot",
+				"github.vscode-github-actions"
 			]
 		}
 	},
@@ -27,7 +28,11 @@
 	"runArgs": [
 		"--env-file",
 		".env"
-	]
+	],
+	"features": {
+		"ghcr.io/dhoeric/features/act:1": {},
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
+	}
 
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
