@@ -38,10 +38,11 @@ def entry_point(cloud_event):
         return
 
     formatted_text = format.extract_code_blocks(generated_text) or generated_text
+    formatted_title = format.extract_title(generated_title)
     used_tokens = chat_response.usage.total_tokens
     print("Used tokens: " + str(used_tokens))
     print("Generated text: " + formatted_text)
-    publish.publish_message(publish.makePublishMessage(page_id, formatted_text, generated_title, generated_comment), pubsub_topic_name)
+    publish.publish_message(publish.makePublishMessage(page_id, formatted_text, formatted_title, generated_comment), pubsub_topic_name)
 
 def extract_ai_response(chat_response):
     if chat_response.choices[0].finish_reason != "stop":
