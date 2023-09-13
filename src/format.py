@@ -13,4 +13,7 @@ def extract_code_blocks(text):
 def extract_title(title):
     pattern = r"「(.*?)」"
     matches = re.findall(pattern, title, re.DOTALL)
+    title = matches[0] if matches else title
+    pattern = r"\"(.*?)\""
+    matches = re.findall(pattern, title, re.DOTALL)
     return matches[0] if matches else title
