@@ -56,6 +56,10 @@ def improve_message_query_prompt(generated_text):
         {
             "role": "assistant",
             "content": "はい、わかりました。では文書を頂戴します。その後、修正した文書をコードブロックに入れて提出しますね。"
+        },
+        {
+            "role": "user",
+            "content": generated_text
         }
     ]
     return messages
