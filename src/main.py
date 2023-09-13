@@ -23,31 +23,33 @@ def entry_point(cloud_event):
         print("ChatGPT did not finish generating text")
         return
 
-    formatted_text = format.extract_code_blocks(generated_text) or generated_text
+    extracted_markdown = format.extract_code_blocks(generated_text) or generated_text
 
-    messages = gpt_generate.imporove_message_query_prompt(formatted_text)
+    messages = gpt_generate.improve_message_query_prompt(extracted_markdown)
     chat_response = gpt_generate.gpt_generate(messages, api_key)
-    generated_text = extract_ai_response(chat_response)
-    if not generated_text:
+    formatted_response = extract_ai_response(chat_response)
+    if not formatted_response:
         print("ChatGPT did not finish generating text")
         return
 
-    messages = gpt_generate.generate_title_query_prompt(generated_text)
+    formatted_text = format.extract_code_blocks(formatted_response) or formatted_response
+
+    messages = gpt_generate.generate_title_query_prompt(formatted_text)
     chat_response = gpt_generate.gpt_generate(messages, api_key)
     generated_title = extract_ai_response(chat_response)
     if not generated_title:
         print("ChatGPT did not finish generating text")
         return
 
-    messages = gpt_generate.generate_comment_query_prompt(generated_title, generated_text)
+    formatted_title = format.extract_title(generated_title)
+
+    messages = gpt_generate.generate_comment_query_prompt(formatted_title, formatted_text)
     chat_response = gpt_generate.gpt_generate(messages, api_key)
     generated_comment = extract_ai_response(chat_response)
     if not generated_comment:
         print("ChatGPT did not finish generating text")
         return
 
-    formatted_text = format.extract_code_blocks(formatted_text) or formatted_text
-    formatted_title = format.extract_title(generated_title)
     used_tokens = chat_response.usage.total_tokens
     print("Used tokens: " + str(used_tokens))
     print("Generated text: " + formatted_text)

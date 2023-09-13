@@ -43,7 +43,7 @@ def generate_message_query_prompt(reasoning_text):
     ]
     return messages
 
-def imporove_message_query_prompt(generated_text):
+def improve_message_query_prompt(generated_text):
     messages = [
         {
             "role": "system",
