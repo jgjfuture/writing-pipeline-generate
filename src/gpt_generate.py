@@ -4,7 +4,7 @@ import openai
 def gpt_generate(messages_array, api_key):
     openai.api_key = api_key
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=messages_array
     )
     return response
