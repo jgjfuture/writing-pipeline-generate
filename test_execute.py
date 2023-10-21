@@ -1,6 +1,6 @@
 import os
-import gpt_generate
-import format
+from src import gpt_generate
+from src import format
 
 
 def main():
