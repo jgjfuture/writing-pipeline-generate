@@ -20,7 +20,8 @@
 			"extensions": [
 				"GitHub.copilot-chat",
 				"GitHub.copilot",
-				"github.vscode-github-actions"
+				"github.vscode-github-actions",
+				"ms-python.black-formatter"
 			]
 		}
 	},
