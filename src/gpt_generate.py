@@ -1,11 +1,13 @@
 import openai
 
 
-def gpt_generate(messages_array, api_key):
+def gpt_generate(messages_array, functions, api_key, force_call = 'auto'):
     openai.api_key = api_key
     response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=messages_array
+        model="gpt-4-0613",
+        messages=messages_array,
+        functions=functions,
+        function_call={'name': force_call},
     )
     return response
 
@@ -14,7 +16,7 @@ def generate_message_query_prompt(reasoning_text):
     messages = [
         {
             "role": "user",
-            "content": "今から、OCRで取得した、ちょっと読みにくく、誤字があり、文書の区切りが不自然であるような文書を渡すので、元の内容の復元を試みて報告してください。"
+            "content": "今から、OCRで取得した、ちょっと読みにくく、誤字があり、文書の区切りが不自然であるような文書を渡すので、元の内容を復元して自然な日本語にして報告してください。"
         },
         {
             "role": "assistant",
@@ -30,7 +32,7 @@ def generate_message_query_prompt(reasoning_text):
         },
         {
             "role": "user",
-            "content": "推測した文書をそのまま提示するのではなく、その内容をMarkdownの箇条書きにしてください。通常の項目は順序付きの箇条書きではなく、順序なしの箇条書きで表現してください。また、箇条書きの項目の内容がTODOとして判断できるとあなたが解釈したなら、Markdownのチェックリストで表現してください。`- [ ]`で表現されるものです。マークダウンのコードブロックに入れてコードを提出してください。"
+            "content": "推測した文書をそのまま提示するのではなく、その内容をMarkdownの箇条書きにしてください。通常の項目は順序付きの箇条書きではなく、順序なしの箇条書きで表現してください。また、箇条書きの項目の内容がTODOとして判断できるとあなたが解釈したなら、Markdownのチェックリストで表現してください。`- [ ]`で表現されるものです。"
         },
         {
             "role": "assistant",
@@ -41,45 +43,25 @@ def generate_message_query_prompt(reasoning_text):
             "content": reasoning_text
         }
     ]
-    return messages
-
-def improve_message_query_prompt(generated_text):
-    messages = [
-        {
-            "role": "system",
-            "content": "あなたはマークダウンコードを受け取り、マークダウンコードを返すマシンです。それ以外の形式の入力は受け付けず、それ以外の形式の出力は返しません。"
+    function = {
+        'name': 'report_markdown',
+        'description': '作成したマークダウンの箇条書きを報告します。',
+        'parameters': {
+            'type': 'object',
+            'properties': {
+                'markdown': {
+                    'type': 'string',
+                    'description': '作成したマークダウンの箇条書き'
+                },
+                'title': {
+                    'type': 'string',
+                    'description': '作成したマークダウンのタイトル。20文字以内の文字列。作成したマークダウンから類推して作成したもの。'
+                },
+            },
+            'required': ['markdown', 'title']
         },
-        {
-            "role": "user",
-            "content": "今から、不自然な日本語や誤字・脱字があるような文書を渡すので、それを修正して、自然な文書にしてください。与える文書の書式はマークダウンで、箇条書きで構成されています。マークダウンのコードブロックに入れてコードを提出してください。"
-        },
-        {
-            "role": "assistant",
-            "content": "はい、わかりました。では文書を頂戴します。その後、修正した文書をコードブロックに入れて提出しますね。"
-        },
-        {
-            "role": "user",
-            "content": generated_text
-        }
-    ]
-    return messages
-
-def generate_title_query_prompt(message):
-    messages = [
-        {
-            "role": "user",
-            "content": "今から箇条書きで構成された文書を渡すので、そのタイトルを推測してください。結果としてタイトルのみを出力してください。タイトルは20文字以内にしてください。"
-        },
-        {
-            "role": "assistant",
-            "content": "はい、わかりました。では文書を頂戴します。"
-        },
-        {
-            "role": "user",
-            "content": message
-        },
-    ]
-    return messages
+    }
+    return [messages, function]
 
 def generate_comment_query_prompt(title, message):
     messages = [
@@ -100,4 +82,18 @@ def generate_comment_query_prompt(title, message):
             "content": f"タイトル: {title}\n文書: {message}"
         }
     ]
-    return messages
+    function = {
+        'name': 'report_comment',
+        'description': '作成したコメントを報告します。',
+        'parameters': {
+            'type': 'object',
+            'properties': {
+                'comment': {
+                    'type': 'string',
+                    'description': '作成したコメント'
+                },
+            },
+            'required': ['comment']
+        },
+    }
+    return [messages, function]
